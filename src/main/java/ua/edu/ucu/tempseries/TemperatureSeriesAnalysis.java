@@ -1,52 +1,186 @@
 package ua.edu.ucu.tempseries;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.InputMismatchException;
+@Getter
 public class TemperatureSeriesAnalysis {
-
+    private double[] temperatureSeries;
+    private int temperatureAmount;
+    private int size;
+    private double minPossible;
     public TemperatureSeriesAnalysis() {
+         this.minPossible=-273;
+         this.temperatureSeries = new double[0];
+         this.temperatureAmount = temperatureSeries.length;
+         this.size=0;
 
+    }
+    public int getSize(){
+        return size;
     }
 
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
-
+        this.minPossible=-273;
+        if (check(temperatureSeries)){
+            this.temperatureSeries=temperatureSeries;
+            this.temperatureAmount = temperatureSeries.length;
+            this.size=temperatureSeries.length;
+        }
+        else {
+            this.temperatureSeries = new double[0];
+            this.temperatureAmount = temperatureSeries.length;
+            this.size=0;
+        }
     }
-
+    public boolean check(double[] temperatureSeries){
+        for (int i=0;i<temperatureSeries.length;i++){
+            if (temperatureSeries[i]<minPossible){
+                throw new InputMismatchException();
+            }
+        }
+        return true;
+    }
+    public double sum(){
+        double temperatureSum=0;
+        for (int i=0;i<temperatureAmount;i++){
+            temperatureSum+=temperatureSeries[i];
+        }
+        return temperatureSum;
+    }
     public double average() {
-        return -1;
+        if (temperatureAmount==0) {
+            throw new IllegalArgumentException();
+        }
+        return sum()/temperatureAmount;
     }
 
     public double deviation() {
-        return 0;
+        if (temperatureAmount==0){
+            throw new IllegalArgumentException();
+        }
+        double mean= average();
+        double summa=0;
+        for (int i=0;i<temperatureAmount;i++){
+            summa+=Math.pow(temperatureSeries[i]-mean,2);
+        }
+        double variance = summa/(temperatureAmount);
+        return Math.sqrt(variance);
     }
 
     public double min() {
-        return 0;
+        if (temperatureAmount==0){
+            throw new IllegalArgumentException();
+        }
+        double minTemperature=temperatureSeries[0];
+        for (int i=1;i<temperatureAmount;i++){
+            if (temperatureSeries[i]<minTemperature){
+                minTemperature=temperatureSeries[i];
+            }
+        }
+        return minTemperature;
     }
 
     public double max() {
-        return 0;
+        if (temperatureAmount==0){
+            throw new IllegalArgumentException();
+        }
+        double maxTemperature=temperatureSeries[0];
+        for (int i=1;i<temperatureAmount;i++){
+            if (temperatureSeries[i]>maxTemperature){
+                maxTemperature=temperatureSeries[i];
+            }
+        }
+        return maxTemperature;
     }
 
     public double findTempClosestToZero() {
-        return 0;
+        return findTempClosestToValue(0);
     }
 
     public double findTempClosestToValue(double tempValue) {
-        return 0;
+        if (temperatureAmount==0){
+            throw new IllegalArgumentException();
+        }
+        double closestTemperature = temperatureSeries[0];
+        double closestDifference = Math.abs(tempValue-closestTemperature);
+        for (int i=1;i<temperatureAmount;i++){
+            if (Math.abs(temperatureSeries[i]-tempValue)<closestDifference){
+                closestDifference=Math.abs(temperatureSeries[i]-tempValue);
+                closestTemperature=temperatureSeries[i];
+
+            }
+            else if (Math.abs(temperatureSeries[i]-tempValue)==closestDifference && closestTemperature<temperatureSeries[i]){
+                closestTemperature = temperatureSeries[i];
+            }
+        }
+        return closestTemperature;
     }
 
     public double[] findTempsLessThen(double tempValue) {
-        return null;
+        double[] sortedTemperatures = Arrays.copyOf(temperatureSeries,temperatureAmount);
+        Arrays.sort(sortedTemperatures);
+        int range = 0;
+        int index = 0;
+        while (index<temperatureAmount && sortedTemperatures[index]<tempValue){
+            range++;
+            index++;
+        }
+//        if (range==0){
+//            return new double[]{};
+//        }
+        return Arrays.copyOfRange(sortedTemperatures,0,range);
     }
 
     public double[] findTempsGreaterThen(double tempValue) {
-        return null;
+        double[] sortedTemperatures = Arrays.copyOf(temperatureSeries,temperatureAmount);
+        Arrays.sort(sortedTemperatures);
+        int range = 0;
+        int index = temperatureAmount-1;
+        while (index>=0 && sortedTemperatures[index]>tempValue){
+            range++;
+            index--;
+        }
+        if (range==0){
+            return new double[]{};
+        }
+        else if(range==temperatureAmount){
+            return sortedTemperatures;
+        }
+       return Arrays.copyOfRange(sortedTemperatures,range,temperatureAmount);
     }
 
     public TempSummaryStatistics summaryStatistics() {
-        return null;
+        if (temperatureAmount==0){
+            throw new IllegalArgumentException();
+        }
+        return new TempSummaryStatistics(average(),deviation(),min(),max());
     }
 
-    public int addTemps(double... temps) {
-        return 0;
+    public double addTemps(double... temps) {
+//        if (temperatureAmount==0){
+//            temperatureSeries = new double[1];
+//        }
+        for (double temp:temps){
+            if (temp<minPossible){
+                throw new InputMismatchException();
+            }
+            if (temperatureAmount==size) {
+                if (size==0){
+                    size=1;
+                }
+                else {
+                    size = size * 2;
+                }
+                double[] newTempSeries = new double[size];
+                System.arraycopy(temperatureSeries, 0, newTempSeries, 0, temperatureAmount);
+                temperatureSeries = newTempSeries;
+            }
+            temperatureAmount+=1;
+            temperatureSeries[temperatureAmount-1]=temp;
+            }
+
+        return sum();
     }
 }
