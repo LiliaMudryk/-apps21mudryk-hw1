@@ -1,10 +1,7 @@
 package ua.edu.ucu.tempseries;
 
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.InputMismatchException;
-@Getter
 public class TemperatureSeriesAnalysis {
     private double[] temperatureSeries;
     private int temperatureAmount;
