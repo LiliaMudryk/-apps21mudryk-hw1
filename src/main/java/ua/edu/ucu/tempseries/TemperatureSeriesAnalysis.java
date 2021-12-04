@@ -16,14 +16,14 @@ public class TemperatureSeriesAnalysis {
 
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         this.temperatureSeries = temperatureSeries;
-        if (check()){
+        if (check()) {
             this.temperatureAmount = temperatureSeries.length;
             this.size = temperatureSeries.length;
         }
         else {
             this.temperatureSeries = new double[0];
             this.temperatureAmount = temperatureSeries.length;
-            this.size=0;
+            this.size = 0;
         }
     }
 
@@ -42,7 +42,7 @@ public class TemperatureSeriesAnalysis {
     public double sum() {
         double temperatureSum = 0;
         for (int i = 0; i < temperatureAmount; i++) {
-            temperatureSum+= temperatureSeries[i];
+            temperatureSum += temperatureSeries[i];
         }
         return temperatureSum;
     }
@@ -60,19 +60,20 @@ public class TemperatureSeriesAnalysis {
         double mean = average();
         double summa = 0;
         for (int i = 0; i < temperatureAmount; i++) {
-            summa+= Math.pow(temperatureSeries[i] - mean, 2);
+            summa += (temperatureSeries[i] - mean) *
+                     (temperatureSeries[i] - mean);
         }
         double variance = summa / (temperatureAmount);
         return Math.sqrt(variance);
     }
 
     public double min() {
-        if (temperatureAmount==0) {
+        if (temperatureAmount == 0) {
             throw new IllegalArgumentException();
         }
         double minTemperature = temperatureSeries[0];
-        for (int i = 1; i < temperatureAmount; i++){
-            if (temperatureSeries[i] < minTemperature){
+        for (int i = 1; i < temperatureAmount; i++) {
+            if (temperatureSeries[i] < minTemperature) {
                 minTemperature = temperatureSeries[i];
             }
         }
@@ -84,7 +85,7 @@ public class TemperatureSeriesAnalysis {
             throw new IllegalArgumentException();
         }
         double maxTemperature = temperatureSeries[0];
-        for (int i=1; i < temperatureAmount; i++) {
+        for (int i = 1; i < temperatureAmount; i++) {
             if (temperatureSeries[i] > maxTemperature) {
                 maxTemperature = temperatureSeries[i];
             }
@@ -103,8 +104,10 @@ public class TemperatureSeriesAnalysis {
         double closestTemperature = temperatureSeries[0];
         double closestDifference = Math.abs(tempValue - closestTemperature);
         for (int i = 1; i < temperatureAmount; i++) {
-            if (Math.abs(temperatureSeries[i] - tempValue) < closestDifference) {
-                closestDifference = Math.abs(temperatureSeries[i] - tempValue);
+            if (Math.abs(temperatureSeries[i] - tempValue) <
+                    closestDifference) {
+                closestDifference = Math.abs(temperatureSeries[i] -
+                                             tempValue);
                 closestTemperature = temperatureSeries[i];
 
             }
@@ -122,8 +125,8 @@ public class TemperatureSeriesAnalysis {
         Arrays.sort(sortedTemperatures);
         int range = 0;
         int index = 0;
-        while (index < temperatureAmount &&
-                sortedTemperatures[index] < tempValue) {
+        while (index < temperatureAmount
+                && sortedTemperatures[index] < tempValue) {
             range++;
             index++;
         }
@@ -140,10 +143,10 @@ public class TemperatureSeriesAnalysis {
             range++;
             index--;
         }
-        if (range == 0){
+        if (range == 0) {
             return new double[]{};
         }
-        else if(range == temperatureAmount) {
+        else if (range == temperatureAmount) {
             return sortedTemperatures;
         }
        return Arrays.copyOfRange(sortedTemperatures, range, temperatureAmount);
@@ -173,7 +176,7 @@ public class TemperatureSeriesAnalysis {
                           0, temperatureAmount);
                 temperatureSeries = newTempSeries;
             }
-            temperatureAmount+= 1;
+            temperatureAmount += 1;
             temperatureSeries[temperatureAmount-1] = temp;
             }
 
