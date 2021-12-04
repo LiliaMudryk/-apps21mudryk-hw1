@@ -60,8 +60,8 @@ public class TemperatureSeriesAnalysis {
         double mean = average();
         double summa = 0;
         for (int i = 0; i < temperatureAmount; i++) {
-            summa += (temperatureSeries[i] - mean) *
-                     (temperatureSeries[i] - mean);
+            summa += (temperatureSeries[i] - mean)
+                    * (temperatureSeries[i] - mean);
         }
         double variance = summa / (temperatureAmount);
         return Math.sqrt(variance);
@@ -104,14 +104,15 @@ public class TemperatureSeriesAnalysis {
         double closestTemperature = temperatureSeries[0];
         double closestDifference = Math.abs(tempValue - closestTemperature);
         for (int i = 1; i < temperatureAmount; i++) {
-            if (Math.abs(temperatureSeries[i] - tempValue) <
-                    closestDifference) {
-                closestDifference = Math.abs(temperatureSeries[i] -
-                                             tempValue);
+            if (Math.abs(temperatureSeries[i] - tempValue)
+                    < closestDifference) {
+                closestDifference = Math.abs(temperatureSeries[i]
+                        - tempValue);
                 closestTemperature = temperatureSeries[i];
 
             }
-            else if (Math.abs(temperatureSeries[i] - tempValue) == closestDifference
+            else if (Math.abs(temperatureSeries[i] - tempValue)
+                     == closestDifference
                      && closestTemperature < temperatureSeries[i]) {
                 closestTemperature = temperatureSeries[i];
             }
@@ -130,7 +131,7 @@ public class TemperatureSeriesAnalysis {
             range++;
             index++;
         }
-        return Arrays.copyOfRange(sortedTemperatures ,0, range);
+        return Arrays.copyOfRange(sortedTemperatures, 0, range);
     }
 
     public double[] findTempsGreaterThen(double tempValue) {
